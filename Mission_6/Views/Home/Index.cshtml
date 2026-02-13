@@ -1,0 +1,16 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+}
+
+<div class="text-center mt-5">
+    <h1 class="display-3 fw-bold">The Joel Hilton Film Collection</h1>
+    <p class="lead text-muted">Curated by a man who takes his movies very seriously.</p>
+    <hr class="my-4 w-50 mx-auto" />
+    <img src="~/img/joelhiltonheadshot.jpg" height="500" class="rounded shadow-lg my-4" alt="Joel Hilton" />
+    <div class="mt-4">
+        <p class="fs-5">
+            Learn more about the man, the myth, the legend
+            <a asp-controller="Home" asp-action="GetToKnow" class="fw-bold text-decoration-none">here!</a>
+        </p>
+    </div>
+</div>
