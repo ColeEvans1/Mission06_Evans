@@ -1,7 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Mission06_Evans.Models;
 using System.Diagnostics;
-using static System.Net.Mime.MediaTypeNames;
 
 namespace Mission06_Evans.Controllers
 {
@@ -23,22 +22,61 @@ namespace Mission06_Evans.Controllers
             return View();
         }
 
+        public IActionResult MovieList()
+        {
+            var movies = _context.Movies.ToList();
+            return View(movies);
+        }
+
         [HttpGet]
         public IActionResult AddMovie()
         {
-            return View();
+            ViewBag.Categories = _context.Categories.OrderBy(x => x.CategoryName).ToList();
+            return View("AddMovie", new Movie());
         }
 
-        [HttpPost] //Actually submits the form
+        [HttpPost]
         public IActionResult AddMovie(Movie response)
         {
-            if (ModelState.IsValid)        // Are all validation rules met?
+            if (ModelState.IsValid)
             {
-                _context.Movies.Add(response);    // Yes → add to database
-                _context.SaveChanges();         // Save it
-                return RedirectToAction("Index"); // Go back to home
+                _context.Movies.Add(response);
+                _context.SaveChanges();
+                return RedirectToAction("MovieList");
             }
-            return View(response);  // No → show the form again with errors
+            ViewBag.Categories = _context.Categories.OrderBy(x => x.CategoryName).ToList();
+            return View(response);
+        }
+
+        [HttpGet]
+        public IActionResult EditMovie(int id)
+        {
+            var recordToEdit = _context.Movies.Single(x => x.MovieId == id);
+            ViewBag.Categories = _context.Categories.OrderBy(x => x.CategoryName).ToList();
+            return View("AddMovie", recordToEdit);
+        }
+
+        [HttpPost]
+        public IActionResult EditMovie(Movie updatedInfo)
+        {
+            _context.Movies.Update(updatedInfo);
+            _context.SaveChanges();
+            return RedirectToAction("MovieList");
+        }
+
+        [HttpGet]
+        public IActionResult DeleteMovie(int id)
+        {
+            var recordToDelete = _context.Movies.Single(x => x.MovieId == id);
+            return View(recordToDelete);
+        }
+
+        [HttpPost]
+        public IActionResult DeleteMovie(Movie movie)
+        {
+            _context.Movies.Remove(movie);
+            _context.SaveChanges();
+            return RedirectToAction("MovieList");
         }
 
     }
